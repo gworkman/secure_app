@@ -59,6 +59,20 @@ config :secure_app, SecureAppWeb.Endpoint,
     ]
   ]
 
+# configure the vault encryption method and parameters
+config :secure_app, SecureApp.Vault,
+  json_library: Jason,
+  ciphers: [
+    default: Cloak.Ciphers.AES.GCM,
+    tag: "AES.GCM.V1",
+    key: Base.decode64!("0xO0pwiFpvutsAvmASgYJR9qbOU7QyEX3XY54SY9r+M="),
+    iv_length: 12
+  ]
+
+config :secure_app, SecureApp.Hashed.HMAC,
+  algorithm: :sha512,
+  secret: "NGbyAd0gQgiIBfZLHiwsk2EVsbci8fBXGwWSuyWp70w="
+
 # Enable dev routes for dashboard and mailbox
 config :secure_app, dev_routes: true
 

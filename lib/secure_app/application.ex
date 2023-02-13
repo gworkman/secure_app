@@ -10,6 +10,8 @@ defmodule SecureApp.Application do
     children = [
       # Start the Telemetry supervisor
       SecureAppWeb.Telemetry,
+      # Start the Vault
+      SecureApp.Vault,
       # Start the Ecto repository
       SecureApp.Repo,
       # Start the PubSub system

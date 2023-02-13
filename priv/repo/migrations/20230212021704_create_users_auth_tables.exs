@@ -3,13 +3,14 @@ defmodule SecureApp.Repo.Migrations.CreateUsersAuthTables do
 
   def change do
     create table(:users) do
-      add :email, :string, null: false, collate: :nocase
+      add :email, :binary, null: false
+      add :email_hashed, :binary, null: false
       add :hashed_password, :string, null: false
       add :confirmed_at, :naive_datetime
       timestamps()
     end
 
-    create unique_index(:users, [:email])
+    create unique_index(:users, [:email_hashed])
 
     create table(:users_tokens) do
       add :user_id, references(:users, on_delete: :delete_all), null: false

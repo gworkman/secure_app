@@ -10,8 +10,6 @@ defmodule SecureApp.Application do
     children = [
       # Start the Telemetry supervisor
       SecureAppWeb.Telemetry,
-      # Start the Vault
-      SecureApp.Vault,
       # Start the Ecto repository
       SecureApp.Repo,
       # Start the PubSub system
@@ -19,9 +17,11 @@ defmodule SecureApp.Application do
       # Start Finch
       {Finch, name: SecureApp.Finch},
       # Start the Endpoint (http/https)
-      SecureAppWeb.Endpoint
+      SecureAppWeb.Endpoint,
       # Start a worker by calling: SecureApp.Worker.start_link(arg)
       # {SecureApp.Worker, arg}
+      # Start the Vault
+      SecureApp.Vault
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

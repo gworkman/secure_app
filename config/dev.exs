@@ -63,10 +63,11 @@ config :secure_app, SecureAppWeb.Endpoint,
 config :secure_app, SecureApp.Vault,
   json_library: Jason,
   ciphers: [
-    default: Cloak.Ciphers.AES.GCM,
-    tag: "AES.GCM.V1",
-    key: Base.decode64!("0xO0pwiFpvutsAvmASgYJR9qbOU7QyEX3XY54SY9r+M="),
-    iv_length: 12
+    default:
+      {Cloak.Ciphers.AES.GCM,
+       tag: "AES.GCM.V1",
+       key: Base.decode64!("0xO0pwiFpvutsAvmASgYJR9qbOU7QyEX3XY54SY9r+M="),
+       iv_length: 12}
   ]
 
 config :secure_app, SecureApp.Hashed.HMAC,

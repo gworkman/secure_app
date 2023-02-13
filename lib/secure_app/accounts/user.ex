@@ -3,7 +3,8 @@ defmodule SecureApp.Accounts.User do
   import Ecto.Changeset
 
   schema "users" do
-    field :email, :string
+    field :email, SecureApp.Encrypted.Binary
+    field :email_hashed, SecureApp.Hashed.HMAC
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
@@ -46,6 +47,7 @@ defmodule SecureApp.Accounts.User do
     |> validate_required([:email])
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
     |> validate_length(:email, max: 160)
+    |> maybe_put_hashed_email()
     |> maybe_validate_unique_email(opts)
   end
 
@@ -77,8 +79,8 @@ defmodule SecureApp.Accounts.User do
   defp maybe_validate_unique_email(changeset, opts) do
     if Keyword.get(opts, :validate_email, true) do
       changeset
-      |> unsafe_validate_unique(:email, SecureApp.Repo)
-      |> unique_constraint(:email)
+      |> unsafe_validate_unique(:email_hashed, SecureApp.Repo)
+      |> unique_constraint(:email_hashed)
     else
       changeset
     end
@@ -150,6 +152,16 @@ defmodule SecureApp.Accounts.User do
       changeset
     else
       add_error(changeset, :current_password, "is not valid")
+    end
+  end
+
+  defp maybe_put_hashed_email(changeset) do
+    email = get_field(changeset, :email)
+
+    if email do
+      put_change(changeset, :email_hashed, email |> String.downcase())
+    else
+      changeset
     end
   end
 end
